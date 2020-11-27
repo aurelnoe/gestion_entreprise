@@ -1,8 +1,8 @@
 <?php
-include_once("../Class/Employe.php");
-include_once("../Class/Connexion.php");
-include_once("../Interfaces/InterfaceDAO.php");
-require_once("../Exceptions/DAOException.php");
+include_once("../Modele/Class/Employe.php");
+include_once("../Modele/Class/Connexion.php");
+include_once("../Modele/Interfaces/InterfaceDAO.php");
+require_once("../Modele/Exceptions/DAOException.php");
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 

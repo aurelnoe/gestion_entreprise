@@ -1,8 +1,8 @@
 <?php
-include_once("../Class/User.php"); 
-include_once("../Class/Connexion.php");
-include_once("../Interfaces/InterfaceUser.php");
-require_once("../Exceptions/DAOException.php");
+include_once("Modele/Class/User.php"); 
+include_once("Modele/Class/Connexion.php");
+include_once("Modele/Interfaces/InterfaceUser.php");
+require_once("Modele/Exceptions/DAOException.php");
 
 class UserMYSQLIDAO extends Connexion
 {

@@ -1,8 +1,8 @@
 <?php
-include_once("../Class/Service.php"); 
-include_once("../Class/Connexion.php");
-include_once("../Interfaces/InterfaceDAO.php");
-require_once("../Exceptions/DAOException.php");
+include_once("../Modele/Class/Service.php"); 
+include_once("../Modele/Class/Connexion.php");
+include_once("../Modele/Interfaces/InterfaceDAO.php");
+require_once("../Modele/Exceptions/DAOException.php");
 
 
 class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceService

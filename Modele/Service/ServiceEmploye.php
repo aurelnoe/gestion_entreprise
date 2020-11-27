@@ -1,6 +1,6 @@
 <?php
-include_once("../DAO/EmployeMYSQLIDAO.php");
-require_once("../Exceptions/DAOException.php");
+include_once("../Modele/DAO/EmployeMYSQLIDAO.php");
+require_once("../Modele/Exceptions/DAOException.php");
 
 class ServiceEmploye
 {

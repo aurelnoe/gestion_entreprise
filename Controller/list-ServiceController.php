@@ -87,8 +87,7 @@ if (isset($_GET['action'])) {
     
                 echo listServices($admin,$services,$serviceAffect,$se->getCode());
                 die;
-            }
-            
+            }          
         }
     }
     /***************** SUPPRIMER SERVICE **********************************/
@@ -120,15 +119,15 @@ if (isset($_GET['action'])) {
     
                 echo listServices($admin,$services,$serviceAffect,$se->getCode());
                 die;
-            }
-            
+            }         
         }
     }
 }
 
 /************************************** Recupere toutes les valeurs */
 try {
-    $services = ServiceService::searchAll(); 
+    $services = ServiceService::searchAll();
+    //print_r (json_decode($services)); 
 
     $serviceAffect = ServiceService::serviceAffect(); 
     $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';

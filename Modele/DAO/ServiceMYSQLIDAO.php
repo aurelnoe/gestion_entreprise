@@ -4,7 +4,6 @@ include_once("../Modele/Class/Connexion.php");
 include_once("../Modele/Interfaces/InterfaceDAO.php");
 require_once("../Modele/Exceptions/DAOException.php");
 
-
 class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceService
 {    
    /******************* ADD SERVICE****************************/
@@ -30,7 +29,6 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
         finally{
             $db->close(); 
         }
-          
     }
 
     /******************* UPDATE SERVICE****************************/
@@ -56,8 +54,7 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
         }
         finally{
             $db->close(); 
-        }
-          
+        }    
     }
 
     /******************* DELETE SERVICE****************************/
@@ -79,8 +76,7 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
         }
         finally{
             $db->close(); 
-        }
-        
+        }   
     }
 
     /************ SEARCH ALL SERVICES ******************/
@@ -102,12 +98,12 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
                 $service = new Service();
                 $service->setNoService($value['no_service'])->setLibelle($value['libelle'])->setVille($value['ville']);
                 array_push($allServices,$service);
-            }
-            
-            return $allServices;
+            }          
             if (empty($allServices)) {
                 throw new DAOException("La liste des services est indisponible",9997);
             }
+            // return json_encode($allServices);
+            return $allServices;
         }
         catch (mysqli_sql_exception $e) {
             throw new DAOException($e->getMessage(),$e->getCode());           
@@ -115,8 +111,7 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
         finally{
             $rs->free(); 
             $db->close();  
-        } 
-        
+        }        
     }
 
     /************ SEARCH SERVICE ******************/
@@ -133,11 +128,11 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
             $stmt->execute();       
             $rs = $stmt->get_result();
             $service = $rs->fetch_object("Service"); 
-
-            return $service;
+          
             if (empty($service)) {
                 throw new DAOException("L'affichage du service est indisponible",9996);
             }
+            return $service;
         }
         catch (mysqli_sql_exception $e) {
             throw new DAOException($e->getMessage(),$e->getCode());           
@@ -171,10 +166,10 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
                 $allServices[$i] = $service->getNoService();
                 $i++;
             }           
-            return $allServices;
             if (empty($allServices)) {
-                throw new DAOException("L'affichage du service affectés est indisponible",9995);
+                throw new DAOException("L'affichage des services affectés est indisponible",9995);
             }
+            return $allServices;
 
         }catch (mysqli_sql_exception $e) {
             throw new DAOException($e->getMessage(),$e->getCode());           
@@ -182,7 +177,6 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
         finally{
             $rs->free(); 
             $db->close();  
-        }  
-            
+        }             
     }
 }

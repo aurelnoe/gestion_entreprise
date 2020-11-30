@@ -38,7 +38,6 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
             $db->close();
         }
     }
-    //  WHERE NOT EXISTS (SELECT no_employe FROM employes WHERE no_employe = ?)
 
     /******************* UPDATE EMPLOYES*****************************/
 
@@ -103,8 +102,7 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
         }
         finally{
             $db->close();
-        } 
-         
+        }         
     }
 
     /************ SEARCH ALL EMPLOYES ******************/
@@ -140,12 +138,11 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
                         ->setNoProj($value['NOPROJ']);
 
                 array_push($allEmployes,$employe);
-            }
-            
-            return $allEmployes; 
+            }           
             if (empty($allEmployes)) {
                 throw new DAOException("Liste des supérieurs indisponible", 9998);
             }
+            return $allEmployes; 
             
         }catch (mysqli_sql_exception $e) {
             throw new DAOException($e->getMessage(),$e->getCode());           
@@ -185,11 +182,11 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
                         ->setNoService($employe['no_service'])
                         ->setNoProj($employe['NOPROJ']);
 
-            return $newEmploye;  
-
+                        
             if (empty($newEmploye)) {
                 throw new DAOException("L'employé n'a pas été trouvé dans la base de données",9999);
             }
+            return $newEmploye;  
 
         }catch (mysqli_sql_exception $e) {
             throw new DAOException($e->getMessage(),$e->getCode());           
@@ -214,9 +211,6 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
             $stmt->execute();       
             $rs = $stmt->get_result();
             $chef = $rs->fetch_all(MYSQLI_ASSOC);
-                
-            $rs->free(); 
-            $db->close();
 
             $allChef = array();
             $i = 1;
@@ -229,10 +223,14 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
             }               
             return $allChef;
             
-        } catch (mysqli_sql_exception $e) {
+        } 
+        catch (mysqli_sql_exception $e) {
             throw new DAOException($e->getMessage(),$e->getCode());           
         } 
-        
+        finally{
+            $db->close();
+            $rs->free();
+        }     
     }
 }
 // $allMissions = array();

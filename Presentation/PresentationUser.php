@@ -21,7 +21,6 @@ function html()
 function index($message=null,$errorCode=null):void
 {
     if($errorCode && $errorCode == 1042){
-        $message="Connexion à la base de données impossible";
         echo "<div class='alert alert-danger text-center'>Code : $errorCode, Message : $message</div>";
     }
     else if($errorCode && $errorCode == 1081){
@@ -86,7 +85,7 @@ function formulaireInscription($message=null,$errorCode=null):void
 
 function formulaireConnexion($message=null,$errorCode=null):void
 {
-    if ($errorCode == 1042) {
+    if ($errorCode == 1081) {
         
         echo "<div class='alert alert-danger text-center'>Code : $errorCode, Message : $message</div>";
     }

@@ -29,8 +29,7 @@ class UserMYSQLIDAO extends Connexion
         finally{
             $db->close();
             $rs->free();
-        } 
-        
+        }         
     }
 
     public function searchUserbyUserName(string $userName)
@@ -52,10 +51,10 @@ class UserMYSQLIDAO extends Connexion
                 $rs = $stmt->get_result();
                 $data=$rs->fetch_object("User");
 
-                return $data;
                 if (!($data)) {
-                    throw new DAOException("L'utilisateur n'a pas été trouvé dans la base de données",1081);
+                    throw new DAOException("Veuillez saisir un identifiant ou un mot de passe correct",1081);
                 }
+                return $data;
             } 
         }
         catch (mysqli_sql_exception $e) {

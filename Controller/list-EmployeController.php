@@ -6,20 +6,20 @@ include_once("../Presentation/PresentationEmploye.php");
 require_once("../Modele/Exceptions/ServiceException.php");
 //var_dump($_POST);
 $serviceEmployes = new ServiceEmploye();
+$date = new DateTime(date('Y-m-d'));
 
 if (isset($_GET['action'])) {
 
     /****************************************AJOUTER UN EMPLOYE************************/
-    if ($_GET['action'] == 'add' && $_GET['no_employe'] == "") 
+    if ($_GET['action'] == 'add' && $_GET['noEmploye'] == "") 
     {
         if (!empty($_POST) && isset($_POST))
         {    
             /*****************VERIFICATION CONNEXION ****/
             if (!isset($_SESSION['userName'])) {
                 header("Location: index.php");
-            }
-            
-                $noEmploye = $_POST['no_employe'];
+            }            
+                $noEmploye = $_POST['noEmploye'];
                 $nom = is_null($_POST['nom']) ? 'NULL' : $_POST['nom'];
                 $prenom = is_null($_POST['prenom']) ? 'NULL' : $_POST['prenom'];
                 $emploi = is_null($_POST['emploi']) ? 'NULL' : $_POST['emploi'];
@@ -45,36 +45,28 @@ if (isset($_GET['action'])) {
             try {
                 $serviceEmployes->add($employe);
                                     
-                //throw new ServiceException("Problème technique, l'employé n'a pas pu être enregistré.", 9988);           
-                /************************************** Recupere toutes les valeurs */          
-                $employes = $serviceEmployes->searchAll(); 
-                    
-                /********************************** CHERCHE LA LISTE DES SUPERIEURS */           
+                //throw new ServiceException("Problème technique, l'employé n'a pas pu être enregistré.", 9988);  
+                $compteur = $serviceEmployes->compteur($date->format('Y-m-d'));             
+                $employes = $serviceEmployes->searchAll();        
                 $allChef = $serviceEmployes->allSuperieur();            
-
-                /*********************************************VERIFICATION PROFIL*****/
                 $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';
                 
-                echo listEmploye($admin,$employes,$allChef);
+                echo listEmploye($admin,$employes,$allChef,$compteur);
                 die;                 
             } 
-            catch (ServiceException $se) {
-                /************************************** Recupere toutes les valeurs */          
-                $employes = $serviceEmployes->searchAll(); 
-                    
-                /********************************** CHERCHE LA LISTE DES SUPERIEURS */           
+            catch (ServiceException $se) {        
+                $compteur = $serviceEmployes->compteur($date->format('Y-m-d'));
+                $employes = $serviceEmployes->searchAll();          
                 $allChef = $serviceEmployes->allSuperieur();            
-
-                /*********************************************VERIFICATION PROFIL*****/
                 $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';
-                echo listEmploye($admin,$employes,$allChef,$se->getCode());
+                echo listEmploye($admin,$employes,$allChef,$compteur,$se->getCode());
             }          
         }       
     }
 
     /**************************************** MODIFIER UN EMPLOYE ************************/
     elseif ($_GET['action'] == 'update' 
-        && isset($_GET['no_employe'])) 
+        && isset($_GET['noEmploye'])) 
     {
         if (!empty($_POST) && isset($_POST))  
         {   
@@ -83,7 +75,7 @@ if (isset($_GET['action'])) {
                 header("Location: index.php");
             }
             
-            $noEmploye = $_GET['no_employe']; 
+            $noEmploye = $_GET['noEmploye']; 
             $nom = is_null($_POST['nom']) ? 'NULL' : $_POST['nom'];
             $prenom = is_null($_POST['prenom']) ? 'NULL' : $_POST['prenom'];
             $emploi = is_null($_POST['emploi']) ? 'NULL' : $_POST['emploi'];
@@ -108,30 +100,22 @@ if (isset($_GET['action'])) {
                     ->setNoProj($NOPROJ);
             
             try {
-                $serviceEmployes->update($employe); 
-
-                /************************************** Recupere toutes les valeurs */         
-                $employes = $serviceEmployes->searchAll(); 
-            
-                /********************************** CHERCHE LA LISTE DES SUPERIEURS */           
+                $compteur = $serviceEmployes->compteur($date->format('Y-m-d'));
+                $serviceEmployes->update($employe);        
+                $employes = $serviceEmployes->searchAll();        
                 $allChef = $serviceEmployes->allSuperieur();
-
-                /*********************************************VERIFICATION PROFIL*****/
                 $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';
     
-                echo listEmploye($admin,$employes,$allChef);
+                echo listEmploye($admin,$employes,$allChef,$compteur);
                 die;
             } 
             catch (ServiceException $se) {
-                $employes = $serviceEmployes->searchAll(); 
-            
-                /********************************** CHERCHE LA LISTE DES SUPERIEURS */           
+                $compteur = $serviceEmployes->compteur($date->format('Y-m-d'));
+                $employes = $serviceEmployes->searchAll();          
                 $allChef = $serviceEmployes->allSuperieur();
-
-                /*********************************************VERIFICATION PROFIL*****/
                 $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';
     
-                echo listEmploye($admin,$employes,$allChef,$se->getMessage(),$se->getCode());
+                echo listEmploye($admin,$employes,$allChef,$compteur,$se->getMessage(),$se->getCode());
                 die;
             }
         }
@@ -140,38 +124,31 @@ if (isset($_GET['action'])) {
     /****************************************SUPPRIMER UN EMPLOYE************************/
     elseif ($_GET['action'] == 'delete') 
     {
-        if (!empty($_GET['no_employe'])) 
+        if (!empty($_GET['noEmploye'])) 
         {    
             /*****************VERIFICATION CONNEXION ****/
             if (!isset($_SESSION['userName'])) {
                 echo formulaireConnexion();
             }          
             
-            $serviceEmployes->{$_GET['action']}($_GET['no_employe']); 
+            $serviceEmployes->{$_GET['action']}($_GET['noEmploye']); 
 
             try {
-                /************************************** Recupere toutes les valeurs */    
-                $employes = $serviceEmployes->searchAll();
-
-                /********************************** CHERCHE LA LISTE DES SUPERIEURS */              
+                $compteur = $serviceEmployes->compteur($date->format('Y-m-d'));   
+                $employes = $serviceEmployes->searchAll();             
                 $allChef = $serviceEmployes->allSuperieur();
-
-                /***************************VERIFICATION PROFIL*****/
                 $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';
 
-                echo listEmploye($admin,$employes,$allChef);
+                echo listEmploye($admin,$employes,$allChef,$compteur);
                 die;
             } 
             catch (ServiceException $se) {
-                $employes = $serviceEmployes->searchAll();
-
-                /********************************** CHERCHE LA LISTE DES SUPERIEURS */              
+                $compteur = $serviceEmployes->compteur($date->format('Y-m-d'));
+                $employes = $serviceEmployes->searchAll();             
                 $allChef = $serviceEmployes->allSuperieur();
-
-                /***************************VERIFICATION PROFIL*****/
                 $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';
 
-                echo listEmploye($admin,$employes,$allChef,$se->getMessage(),$se->getCode());
+                echo listEmploye($admin,$employes,$allChef,$compteur,$se->getMessage(),$se->getCode());
                 die;
             }           
         }
@@ -180,13 +157,9 @@ if (isset($_GET['action'])) {
 
 
 try {
-    /************************************** Recupere toutes les valeurs */
+    $compteur = $serviceEmployes->compteur($date->format('Y-m-d'));
     $employes = $serviceEmployes->searchAll(); 
-
-    /********************************** CHERCHE LA LISTE DES SUPERIEURS */
     $allChef = $serviceEmployes->allSuperieur();
-    
-    /***************************VERIFICATION PROFIL*****/
     $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';
 
     /*****************VERIFICATION CONNEXION ****/
@@ -194,22 +167,20 @@ try {
         header("Location: index.php");
     }
     else {   
-        echo listEmploye($admin,$employes,$allChef);
+        echo listEmploye($admin,$employes,$allChef,$compteur);
     }
 }
 catch (ServiceException $se) {
+    $compteur = $serviceEmployes->compteur($date->format('Y-m-d'));
     $employes = $serviceEmployes->searchAll(); 
-
     $allChef = $serviceEmployes->allSuperieur();
-    
     $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';
 
-    /*****************VERIFICATION CONNEXION ****/
     if (!isset($_SESSION['userName'])) {
         header("Location: index.php");
     }
     else {   
-        echo listEmploye($admin,$employes,$allChef,$se->getMessage(),$se->getCode());
+        echo listEmploye($admin,$employes,$allChef,$compteur,$se->getMessage(),$se->getCode());
     }
 }
 

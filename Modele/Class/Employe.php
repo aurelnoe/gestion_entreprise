@@ -2,13 +2,14 @@
 
 final class Employe{
 
-    private $no_employe;
+    private $noEmploye;
     private $nom;
     private $prenom;
     private $emploi;
     private $embauche;
     private $salaire;
     private $commission;
+    private $dateAjout;
     private $sup;
     private $no_service;
     private $NOPROJ;
@@ -39,17 +40,33 @@ final class Employe{
     /************************************************/
     public function __toString()
     {
-        return " [Num employé] : " . $this->no_employe
+        return " [Num employé] : " . $this->noEmploye
              . " \n[Nom] : " . $this->nom
              . " \n[Prenom] : " . $this->prenom 
              . " \n[Emploi] : " . $this->emploi 
              . " \n[Embauche] : " . $this->embauche 
              . " \n[Salaire] : " . $this->salaire 
-             . " \n[Commission] : " . $this->commission 
+             . " \n[Commission] : " . $this->commission
+             . " \n[Date Ajout] : " . $this->dateAjout 
              . " \n[Supérieur] : " . $this->sup 
              . " \n[Num Service] : " . $this->no_service 
              . " \n[Num projet] : " . $this->NOPROJ;
     }
+
+    public function jsonSerialize() {
+        return [
+            'Id'         => $this->getNoEmploye(),
+            'Nom'        => $this->getNom(),
+            'Prenom'     => $this->getPrenom(),
+            'Emploi'     => $this->getEmploi(),
+            'Slaire'     => $this->getSalaire(),
+            'Commission' => $this->getCommission(),
+            'Date Ajout' => $this->getdateAjout(),
+            'Supérieur'  => $this->getSup(),
+            'noService'  => $this->getNoService(),
+            'noProjet'   => $this->getNoProj()
+        ];
+}
 
     /**** Converti datetime en string */
     public function dateTimeToString($datetime):?string
@@ -59,12 +76,12 @@ final class Employe{
 
     public function getNoEmploye():?int
     {
-        return $this->no_employe;
+        return $this->noEmploye;
     }
 
     public function setNoEmploye(?int $noEmploye):self
     {
-        $this->no_employe = $noEmploye;
+        $this->noEmploye = $noEmploye;
 
         return $this;
     }
@@ -132,9 +149,29 @@ final class Employe{
         return $this->commission;
     }
     
-    public function setCommission(?float $commission) :self 
+    public function setCommission(?float $commission):self 
     {
         $this->commission = $commission;
+        return $this;
+    }
+
+    /**
+     * Get the value of dateAjout
+     */ 
+    public function getDateAjout():DateTime
+    {
+        $newDate = new DateTime($this->dateAjout);
+        return $newDate ;
+    }
+
+    /**
+     * Set the value of dateAjout
+     *
+     * @return  self
+     */ 
+    public function setDateAjout($dateAjout):self
+    {
+        $this->dateAjout = $dateAjout;
         return $this;
     }
 

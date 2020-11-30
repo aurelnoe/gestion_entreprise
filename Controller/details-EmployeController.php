@@ -7,7 +7,7 @@ require_once("../Modele/Exceptions/ServiceException.php");
 
 try {
     $newEmploye = new ServiceEmploye();
-    $employe = $newEmploye->searchById($_GET['no_employe']);
+    $employe = $newEmploye->searchById($_GET['noEmploye']);
     $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';
     
     if (!isset($_SESSION['userName'])) {
@@ -18,7 +18,7 @@ try {
     }
 } 
 catch (ServiceException $se) {
-    $employe = $newEmploye->searchById($_GET['no_employe']);
+    $employe = $newEmploye->searchById($_GET['noEmploye']);
     $admin = isset($_SESSION['profil']) && $_SESSION['profil'] == 'admin';
     
     if (!isset($_SESSION['userName'])) {

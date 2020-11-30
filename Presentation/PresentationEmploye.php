@@ -13,10 +13,10 @@ function formulaireEmploye($title,$employe,$titleBtn,$action,$message=null,$erro
 
             <h1 class="text-center"><?php echo $title ?></h1>
         
-            <form class="form w-50 m-auto border rounded p-3 my-3" action="list-EmployeController.php?action=<?php echo $action;?>&no_employe=<?php echo ($_GET['action']=='update')?$_GET['no_employe']:"";?>" method="POST">        
+            <form class="form w-50 m-auto border rounded p-3 my-3" action="list-EmployeController.php?action=<?php echo $action;?>&noEmploye=<?php echo ($_GET['action']=='update')?$_GET['noEmploye']:"";?>" method="POST">        
                 <div class="form-group">
-                    <label for="no_employe">Numéro de l'employé</label>
-                    <input type="number" class="form-control" name="no_employe" <?php if(($_GET['action']) == 'update'){echo " readonly";}?> placeholder="<?php if(($_GET['action']) == 'update'){echo $employe->getNoEmploye();}?>">
+                    <label for="noEmploye">Numéro de l'employé</label>
+                    <input type="number" class="form-control" name="noEmploye" <?php if(($_GET['action']) == 'update'){echo " readonly";}?> placeholder="<?php if(($_GET['action']) == 'update'){echo $employe->getNoEmploye();}?>">
                 </div>
                 <div class="form-group">
                     <label for="nom">Nom</label>
@@ -68,7 +68,7 @@ function formulaireEmploye($title,$employe,$titleBtn,$action,$message=null,$erro
 <?php
 }
 
-function listEmploye($admin,$employes,$allChef,$message=null,$errorCode=null)
+function listEmploye($admin,$employes,$allChef,$compteur,$message=null,$errorCode=null)
 {
     if($errorCode && $errorCode == 1062){
         $message = "L'employé existe déja dans la base de données!";
@@ -95,7 +95,7 @@ function listEmploye($admin,$employes,$allChef,$message=null,$errorCode=null)
             </div>
             <?php
             if ($admin) {
-            ?>
+                ?>
             <div class="col-3">
                 <a class="btn btn-success w-75" href="formulaireEmployeController.php?action=add">Ajout employé</a>
             </div>
@@ -103,9 +103,20 @@ function listEmploye($admin,$employes,$allChef,$message=null,$errorCode=null)
             }
             ?>
         </div>
+        <div class="text-center my-4">
+            <h3>Nombre d'employé(s) ajouté(s) aujourd'hui : <?php echo ($compteur['dateAjout'] > 0) ? $compteur['dateAjout'] : 'Aucun employé ajouté aujourd\'hui';  ?></h3>
+        </div>
+        
+        <div class="mt-5 text-center">
+            <input class="form-control w-50 mx-auto my-1" type="search" id="searchName" placeholder="Nom" aria-label="Nom">
+            <input class="form-control w-50 mx-auto my-1" type="search" id="searchFirstName" placeholder="Prénom" aria-label="Prénom">
+            <input class="form-control w-50 mx-auto my-1" type="search" id="searchJob" placeholder="Emploi" aria-label="Emploi">
+            <input class="form-control w-50 mx-auto my-1" type="search" id="searchServiceName" placeholder="Nom du service" aria-label="Nom du service">
+        </div>
+
         <div class="text-center">
             <div class="w-100 pt-4">
-                <table class="table table-striped table-dark">
+                <table id="tableEmployes" class="table table-striped table-dark">
                     <thead>
                         <tr>
                             <th></th>
@@ -123,6 +134,7 @@ function listEmploye($admin,$employes,$allChef,$message=null,$errorCode=null)
                                 <?php
                                 }
                             ?>
+                            <th scope="col">Date d'ajout</th>
                             <th scope="col">Supérieur</th>
                             <th scope="col">Num service</th>
                             <th scope="col">Num de projet</th>
@@ -132,9 +144,6 @@ function listEmploye($admin,$employes,$allChef,$message=null,$errorCode=null)
                     </thead>
                     <tbody>
                         <?php
-                            // echo '<pre>';
-                            // var_dump($chef);
-                            // echo '</pre>';
                                                             
                             echo '<tr>';
 
@@ -144,7 +153,7 @@ function listEmploye($admin,$employes,$allChef,$message=null,$errorCode=null)
 
                                 ?>
                                     <td>
-                                        <a href="details-EmployeController.php?no_employe=<?php echo $employe->getNoEmploye(); ?>" class="btn btn-success">Détails</a>
+                                        <a href="details-EmployeController.php?noEmploye=<?php echo $employe->getNoEmploye(); ?>" class="btn btn-success">Détails</a>
                                     </td>
                                     <td><?php echo $employe->getNoEmploye(); ?></td>
                                     <td><?php echo $employe->getNom(); ?></td>
@@ -160,6 +169,7 @@ function listEmploye($admin,$employes,$allChef,$message=null,$errorCode=null)
                                         <?php       
                                         }
                                     ?>
+                                    <td><?php echo $employe->getdateAjout()->format("d-m-Y"); ?></td>
                                     <td><?php echo $employe->getSup(); ?></td>
                                     <td><?php echo $employe->getNoService(); ?></td>
                                     <td><?php echo $employe->getNoProj(); ?></td>                                                                           
@@ -171,7 +181,7 @@ function listEmploye($admin,$employes,$allChef,$message=null,$errorCode=null)
                                         if ($admin && !$occupe) 
                                         {
                                             ?>
-                                                <a href="list-EmployeController.php?action=delete&no_employe=<?php echo $employe->getNoEmploye();?>" class="btn btn-danger w-100">Supprimer</a>
+                                                <a href="list-EmployeController.php?action=delete&noEmploye=<?php echo $employe->getNoEmploye();?>" class="btn btn-danger w-100">Supprimer</a>
                                             <?php                                                                
                                         }
                                     echo '</td>';                                                                                                                                                                                                                                                                                                                                                         
@@ -182,7 +192,7 @@ function listEmploye($admin,$employes,$allChef,$message=null,$errorCode=null)
                                     if ($admin) 
                                     {                                        
                                     ?>
-                                        <a href="formulaireEmployeController.php?action=update&no_employe=<?php echo $employe->getNoEmploye();?>" class="btn btn-primary w-100">Modifier</a>                                
+                                        <a href="formulaireEmployeController.php?action=update&noEmploye=<?php echo $employe->getNoEmploye();?>" class="btn btn-primary w-100">Modifier</a>                                
                                     <?php
                                     }
                                     ?>
@@ -228,7 +238,8 @@ function detailsEmploye($admin,$employe,$message=null,$errorCode=null)
                         <th scope="col">Commission</th>  
                     <?php
                         }
-                    ?>                   
+                    ?>   
+                    <th>Date d'ajout</th>                
                     <th scope="col">Supérieur</th>
                     <th scope="col">Num service</th>
                     <th scope="col">Num de projet</th>
@@ -253,6 +264,7 @@ function detailsEmploye($admin,$employe,$message=null,$errorCode=null)
                         <?php       
                         }
                     ?>
+                    <td><?php echo $employe->getDateAjout()->format("d-m-Y H:i:s"); ?></td>
                     <td><?php echo $employe->getSup(); ?></td>
                     <td><?php echo $employe->getNoService(); ?></td>
                     <td><?php echo $employe->getNoProj(); ?></td>

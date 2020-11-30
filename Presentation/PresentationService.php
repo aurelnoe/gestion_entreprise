@@ -34,6 +34,7 @@ function formulaireService($title,$service,$titleBtn,$action,$errorCode=null)
             </div>
         </div>      
     </body>
+    
 </html>
 <?php
 }
@@ -76,8 +77,12 @@ function listServices($admin,$services,$serviceAffect,$message=null,$errorCode=n
             }
             ?>           
         </div>
+        
+        <form class="form-inline my-5 text-center">
+            <input class="form-control w-50 m-auto" type="search" id="searchFilterService" placeholder="Search" aria-label="Search">
+        </form>
     
-        <table class="table table-striped">
+        <table id="tableServices" class="table table-striped">
             <thead>
                 <tr>
                     <th></th>

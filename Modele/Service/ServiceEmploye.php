@@ -24,7 +24,7 @@ class ServiceEmploye
     public function update(Employe $employe)
     {
         try {
-            return $this->employeDAO->update($employe, $_GET['no_employe']); 
+            return $this->employeDAO->update($employe, $_GET['noEmploye']); 
         }
         catch (DAOException $de) {
             throw new ServiceException($de->getMessage(),$de->getCode());
@@ -69,6 +69,19 @@ class ServiceEmploye
         try {
             $employe = $this->employeDAO->searchById($getNoEmploye);      
             return $employe;
+        }
+        catch (DAOException $de) {
+            throw new ServiceException($de->getMessage(),$de->getCode());
+        }   
+    }
+
+    /******* PAGE DETAILS EMPLOYE ET FORMULAIRES**********/
+    public function compteur($date)
+    {
+        try {
+            $compteur = $this->employeDAO->compteur($date);   
+              
+            return $compteur;
         }
         catch (DAOException $de) {
             throw new ServiceException($de->getMessage(),$de->getCode());

@@ -26,7 +26,7 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
             $getNoService = $employe->getNoService();
             $getNoProj = $employe->getNoProj();
 
-            $query = "INSERT INTO employes VALUES (?,?,?,?,?,?,?,?,?,?)";            
+            $query = "INSERT INTO employes VALUES (?,?,?,?,?,?,?,NULL,?,?,?)";            
             $stmt = $db->prepare($query); 
             $stmt->bind_param("issssddiii",$getNoemploye,$getNom,$getPrenom,$getEmploi,$getEmbauche,$getSalaire,$getCommission,$getSup,$getNoService,$getNoProj);
             $stmt->execute();
@@ -68,7 +68,7 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
                             sup = ?,
                             no_service = ?,
                             NOPROJ = ?
-                        WHERE no_employe = ?";  
+                        WHERE noEmploye = ?";  
 
             $stmt = $db->prepare($query);
             $stmt->bind_param("ssssddiiii",$getNom,$getPrenom,$getEmploi,$getEmbauche,$getSalaire,$getCommission,$getSup,$getNoService,$getNoProj,$getNoEmploye);
@@ -91,7 +91,7 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
             $connexion = new Connexion();
             $db = $connexion->connexion();
 
-            $query = "DELETE FROM employes WHERE no_employe = ?";
+            $query = "DELETE FROM employes WHERE noEmploye = ?";
             $stmt = $db->prepare($query);
             $stmt->bind_param("i", $getNoEmploye);
             $stmt->execute();
@@ -125,7 +125,7 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
                 $newEmbauche = new DateTime($value['embauche']);
 
                 $employe = new Employe();
-                $employe->setNoEmploye($value['no_employe'])
+                $employe->setNoEmploye($value['noEmploye'])
                         ->setNom($value['nom'])
                         ->setPrenom($value['prenom'])
                         ->setEmploi($value['emploi'])       
@@ -160,7 +160,7 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
             $connexion = new Connexion();
             $db = $connexion->connexion();
             
-            $query = "SELECT * FROM employes WHERE no_employe = ?";   
+            $query = "SELECT * FROM employes WHERE noEmploye = ?";   
             $stmt = $db->prepare($query);
             $stmt->bind_param("i", $getNoEmploye);
             $stmt->execute();       
@@ -168,23 +168,25 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
             $employe = $rs->fetch_array(MYSQLI_ASSOC);
 
             $newEmbauche = new DateTime($employe['embauche']);
+            $newDateAjout = new DateTime($employe['dateAjout']);
 
             $newEmploye = new Employe();
-            $newEmploye ->setNoEmploye($employe['no_employe'])
+            $newEmploye ->setNoEmploye($employe['noEmploye'])
                         ->setNom($employe['nom'])
                         ->setPrenom($employe['prenom'])
                         ->setEmploi($employe['emploi'])       
                         ->setEmbauche($newEmbauche)   
                         ->setSalaire($employe['salaire'])
                         ->setCommission($employe['commission'])
+                        ->setDateAjout($employe['dateAjout'])
                         ->setSup($employe['sup'])
                         ->setNoService($employe['no_service'])
                         ->setNoProj($employe['NOPROJ']);
-
                         
             if (empty($newEmploye)) {
                 throw new DAOException("L'employé n'a pas été trouvé dans la base de données",9999);
             }
+            //var_dump($newEmploye);
             return $newEmploye;  
 
         }catch (mysqli_sql_exception $e) {
@@ -231,7 +233,78 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
             $rs->free();
         }     
     }
+
+    public function compteur(string $date)
+    {
+        try {
+            $connexion = new Connexion();
+            $db = $connexion->connexion();
+            //echo $date;
+            $query = "SELECT COUNT(dateAjout) AS dateAjout FROM employes WHERE DATE_FORMAT(dateAjout,'%Y-%m-%d') = ?";
+            $stmt = $db->prepare($query);
+            $stmt->bind_param("s", $date);
+            $stmt->execute();       
+            $rs = $stmt->get_result();
+            $compteur = $rs->fetch_array(MYSQLI_ASSOC);
+            //echo ($compteur["dateAjout"]);
+            return $compteur;
+        }
+        catch (mysqli_sql_exception $e) {
+            throw new DAOException($e->getMessage(),$e->getCode());           
+        } 
+        finally{
+            $db->close();
+        }
+    }
+
+    public function filter()
+    {
+        try {
+            $connexion = new Connexion();
+            $db = $connexion->connexion();
+
+            $query = 'SELECT nom,prenom,emploi FROM employes';
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            $rs = $stmt->get_result();
+            $employes = $rs->fetch_all(MYSQLI_ASSOC);
+
+            $allEmployes = array();
+
+            foreach ($employes as $value) 
+            {
+                $newEmbauche = new DateTime($value['embauche']);
+
+                $employe = new Employe();
+                $employe->setNom($value['nom'])
+                        ->setPrenom($value['prenom'])
+                        ->setEmploi($value['emploi'])       
+                        ->setEmbauche($newEmbauche)  
+                        ->setSalaire($value['salaire'])
+                        ->setCommission($value['commission'])
+                        ->setSup($value['sup'])
+                        ->setNoService($value['no_service'])
+                        ->setNoProj($value['NOPROJ']);
+
+                array_push($allEmployes,$employe);
+            }           
+            if (empty($allEmployes)) {
+                throw new DAOException("Aucun supérieur n'a été trouvé", 9998);
+            }
+            return $allEmployes; 
+            
+        }catch (mysqli_sql_exception $e) {
+            throw new DAOException($e->getMessage(),$e->getCode());           
+        } 
+        finally{
+            $rs->free(); 
+            $db->close();  
+        }
+    
+    }
 }
+
+
 // $allMissions = array();
         // $i = 1;
         // foreach ($missions as $mission) 

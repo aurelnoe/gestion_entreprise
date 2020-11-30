@@ -14,7 +14,7 @@ if (isset($_GET['action']))
     {  
         try {
             $newEmploye = new ServiceEmploye();
-            $employe = $newEmploye->searchById($_GET['no_employe']);
+            $employe = $newEmploye->searchById($_GET['noEmploye']);
             
             $title = 'Modification service';
             $titleBtn = 'Modifier';
@@ -25,7 +25,7 @@ if (isset($_GET['action']))
         } 
         catch (ServiceException $se) {
             $newEmploye = new ServiceEmploye();
-            $employe = $newEmploye->searchById($_GET['no_employe']);
+            $employe = $newEmploye->searchById($_GET['noEmploye']);
             
             $title = 'Modification service';
             $titleBtn = 'Modifier';

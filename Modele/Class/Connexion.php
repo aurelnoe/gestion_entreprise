@@ -1,5 +1,5 @@
 <?php
-require_once("C:/xampp/htdocs/AFPARoubaix/PHP/gestion_entreprise/Modele/Exceptions/ConnexionException.php");
+require_once("C:/xampp/htdocs/gestion_entreprise/Modele/Exceptions/ConnexionException.php");
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 

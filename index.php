@@ -21,11 +21,11 @@ if (isset($_GET['action']) && !empty($_GET['action']))
                 echo index();
                 die;
             }
-            else {
-                //header("Location: index.php");
-                throw new DAOException(" Veuillez saisir un indentifiant ou un mot de passe correct ",9995);
-                die;           
-            }       
+            // else {
+            //     //header("Location: index.php");
+            //     throw new DAOException(" Veuillez saisir un indentifiant ou un mot de passe correct ",9995);
+            //     die;           
+            // }       
         } 
         catch (ServiceException $se) {
             echo formulaireConnexion($se->getMessage(),$se->getCode()); 

@@ -100,7 +100,7 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
                 array_push($allServices,$service);
             }          
             if (empty($allServices)) {
-                throw new DAOException("La liste des services est indisponible",9997);
+                throw new DAOException("Aucun service n'a été trouvé",9997);
             }
             // return json_encode($allServices);
             return $allServices;
@@ -130,7 +130,7 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
             $service = $rs->fetch_object("Service"); 
           
             if (empty($service)) {
-                throw new DAOException("L'affichage du service est indisponible",9996);
+                throw new DAOException("Le service n'existe pas",9996);
             }
             return $service;
         }
@@ -167,7 +167,7 @@ class ServiceMYSQLIDAO extends Connexion implements DAOInterface,InterfaceServic
                 $i++;
             }           
             if (empty($allServices)) {
-                throw new DAOException("L'affichage des services affectés est indisponible",9995);
+                throw new DAOException("Aucun service affecté n'a été trouvé",9995);
             }
             return $allServices;
 

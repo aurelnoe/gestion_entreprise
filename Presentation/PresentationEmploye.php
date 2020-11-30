@@ -6,8 +6,9 @@ function formulaireEmploye($title,$employe,$titleBtn,$action,$message=null,$erro
         echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div></div>";
     }
 
-    echo html();
-    ?>
+    echo afficher();
+    ?>  
+    <body>
         <div class="container m-auto">
 
             <h1 class="text-center"><?php echo $title ?></h1>
@@ -81,8 +82,9 @@ function listEmploye($admin,$employes,$allChef,$message=null,$errorCode=null)
         echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
     }
 
-    echo html();
-    ?>
+    echo afficher();
+    ?>  
+    <body>
     <div class="container-fluid m-auto">
         <div class="row pt-4 m-auto text-center">
             <div class="col-3">
@@ -205,8 +207,9 @@ function detailsEmploye($admin,$employe,$message=null,$errorCode=null)
     if($errorCode && $errorCode == 9999){
         echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
     }
-    echo html();
-    ?>
+    echo afficher();
+    ?>  
+    <body>
     <div class="container-fluid text-center m-auto">
         <h1 class="my-5">Détails employé</h1>
         <table class="table table-striped table-dark">

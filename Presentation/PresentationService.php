@@ -5,8 +5,8 @@ function formulaireService($title,$service,$titleBtn,$action,$errorCode=null)
     if($errorCode && $errorCode == 9996){
         echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
     }
-    echo html();
-    ?>
+    echo afficher();
+    ?>  <body>
         <div class="container m-auto">
 
             <h1 class="text-center"><?php echo $title ?></h1>
@@ -56,8 +56,8 @@ function listServices($admin,$services,$serviceAffect,$message=null,$errorCode=n
         echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
     }
 
-    echo html();
-    ?>
+    echo afficher();
+    ?>  <body>
     <div class="container-fluid m-auto">
         <div class="row pt-4 m-auto text-center">        
             <div class="col-3 ">
@@ -97,8 +97,7 @@ function listServices($admin,$services,$serviceAffect,$message=null,$errorCode=n
             </thead>
             <tbody>
                 
-                <?php 
-                
+                <?php                
                     echo '<tr>';
                     if (!empty($services)) {
                          
@@ -164,8 +163,8 @@ function detailsService($service,$message=null,$errorCode=null)
     if($errorCode && $errorCode == 9996){
         echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
     }
-    echo html();
-    ?>
+    echo afficher();
+    ?>  <body>
         <div class="container text-center m-auto">
 
         <h1 class="my-5">Détails des services</h1>

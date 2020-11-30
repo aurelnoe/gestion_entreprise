@@ -81,7 +81,6 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
         finally{
             $db->close();
         }
-        
     }
 
     /******************* DELETE EMPLOYES*****************************/
@@ -140,7 +139,7 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
                 array_push($allEmployes,$employe);
             }           
             if (empty($allEmployes)) {
-                throw new DAOException("Liste des supérieurs indisponible", 9998);
+                throw new DAOException("Aucun supérieur n'a été trouvé", 9998);
             }
             return $allEmployes; 
             

@@ -70,16 +70,18 @@ function formulaireEmploye($title,$employe,$titleBtn,$action,$message=null,$erro
 
 function listEmploye($admin,$employes,$allChef,$compteur,$message=null,$errorCode=null)
 {
-    if($errorCode && $errorCode == 1062){
-        $message = "L'employé existe déja dans la base de données!";
-        echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
-    }
-    else if($errorCode && $errorCode == 1027){
-        $message = "L'employé n'a pas pu être modifié!";
-        echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
-    }
-    else if($errorCode && $errorCode == 9998){
-        echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
+    if ($errorCode) {
+        if($errorCode == 1062){
+            $message = "L'employé existe déja dans la base de données!";
+            echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
+        }
+        else if($errorCode == 1027){
+            $message = "L'employé n'a pas pu être modifié!";
+            echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
+        }
+        else if($errorCode == 9998){
+            echo "<div class='alert alert-danger text-center'>Code : $errorCode,\n Message : $message</div>";
+        }  
     }
 
     echo afficher();
@@ -107,12 +109,13 @@ function listEmploye($admin,$employes,$allChef,$compteur,$message=null,$errorCod
             <h3>Nombre d'employé(s) ajouté(s) aujourd'hui : <?php echo ($compteur['dateAjout'] > 0) ? $compteur['dateAjout'] : 'Aucun employé ajouté aujourd\'hui';  ?></h3>
         </div>
         
-        <div class="mt-5 text-center">
-            <input class="form-control w-50 mx-auto my-1" type="search" id="searchName" placeholder="Nom" aria-label="Nom">
-            <input class="form-control w-50 mx-auto my-1" type="search" id="searchFirstName" placeholder="Prénom" aria-label="Prénom">
-            <input class="form-control w-50 mx-auto my-1" type="search" id="searchJob" placeholder="Emploi" aria-label="Emploi">
-            <input class="form-control w-50 mx-auto my-1" type="search" id="searchServiceName" placeholder="Nom du service" aria-label="Nom du service">
-        </div>
+        <form class="mt-5 text-center" method="GET">
+            <input class="form-control w-50 mx-auto my-1" type="search" name="nom" id="searchName" placeholder="Nom" aria-label="Nom">
+            <input class="form-control w-50 mx-auto my-1" type="search" name="prenom" id="searchFirstName" placeholder="Prénom" aria-label="Prénom">
+            <input class="form-control w-50 mx-auto my-1" type="search" name="emploi" id="searchJob" placeholder="Emploi" aria-label="Emploi">
+            <input class="form-control w-50 mx-auto my-1" type="search" name="libelle" id="searchNameService" placeholder="Nom du service" aria-label="Nom du service">
+            <input type="submit">
+        </form>
 
         <div class="text-center">
             <div class="w-100 pt-4">

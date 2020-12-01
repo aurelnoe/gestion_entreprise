@@ -1,7 +1,7 @@
 <?php
 
-final class Employe{
-
+final class Employe implements JsonSerializable
+{
     private $noEmploye;
     private $nom;
     private $prenom;
@@ -53,20 +53,11 @@ final class Employe{
              . " \n[Num projet] : " . $this->NOPROJ;
     }
 
-    public function jsonSerialize() {
-        return [
-            'Id'         => $this->getNoEmploye(),
-            'Nom'        => $this->getNom(),
-            'Prenom'     => $this->getPrenom(),
-            'Emploi'     => $this->getEmploi(),
-            'Slaire'     => $this->getSalaire(),
-            'Commission' => $this->getCommission(),
-            'Date Ajout' => $this->getdateAjout(),
-            'Supérieur'  => $this->getSup(),
-            'noService'  => $this->getNoService(),
-            'noProjet'   => $this->getNoProj()
-        ];
-}
+    public function jsonSerialize() 
+    {    
+        $vars = get_object_vars($this);
+        return $vars;
+    }
 
     /**** Converti datetime en string */
     public function dateTimeToString($datetime):?string

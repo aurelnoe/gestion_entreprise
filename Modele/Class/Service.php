@@ -1,7 +1,7 @@
 <?php
 
-final class Service{
-    
+final class Service implements JsonSerializable
+{    
     private $no_service;
     private $libelle;
     private $ville;
@@ -22,6 +22,12 @@ final class Service{
         "[Num service] : " . $this->noService 
         . " \n[Nom du service] : " . $this->libelle 
         . " \n[Ville] : " . $this->ville;
+    }
+
+    public function jsonSerialize() 
+    {    
+        $vars = get_object_vars($this);
+        return $vars;
     }
 
     public function getNoService(): int 

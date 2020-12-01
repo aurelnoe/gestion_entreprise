@@ -75,13 +75,24 @@ class ServiceEmploye
         }   
     }
 
-    /******* PAGE DETAILS EMPLOYE ET FORMULAIRES**********/
     public function compteur($date)
     {
         try {
             $compteur = $this->employeDAO->compteur($date);   
               
             return $compteur;
+        }
+        catch (DAOException $de) {
+            throw new ServiceException($de->getMessage(),$de->getCode());
+        }   
+    }
+
+    public function filter($requete)
+    {
+        try {
+            $employesFiltre = $this->employeDAO->filter($requete);   
+              
+            return $employesFiltre;
         }
         catch (DAOException $de) {
             throw new ServiceException($de->getMessage(),$de->getCode());

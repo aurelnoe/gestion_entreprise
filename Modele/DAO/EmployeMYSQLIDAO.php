@@ -257,50 +257,42 @@ class EmployeMYSQLIDAO extends Connexion implements DAOInterface,InterfaceEmploy
         }
     }
 
-    public function filter()
+    public function filter(array $params=null)
     {
         try {
             $connexion = new Connexion();
             $db = $connexion->connexion();
 
-            $query = 'SELECT nom,prenom,emploi FROM employes';
-            $stmt = $db->prepare($query);
-            $stmt->execute();
-            $rs = $stmt->get_result();
-            $employes = $rs->fetch_all(MYSQLI_ASSOC);
-
-            $allEmployes = array();
-
-            foreach ($employes as $value) 
-            {
-                $newEmbauche = new DateTime($value['embauche']);
-
-                $employe = new Employe();
-                $employe->setNom($value['nom'])
-                        ->setPrenom($value['prenom'])
-                        ->setEmploi($value['emploi'])       
-                        ->setEmbauche($newEmbauche)  
-                        ->setSalaire($value['salaire'])
-                        ->setCommission($value['commission'])
-                        ->setSup($value['sup'])
-                        ->setNoService($value['no_service'])
-                        ->setNoProj($value['NOPROJ']);
-
-                array_push($allEmployes,$employe);
-            }           
-            if (empty($allEmployes)) {
-                throw new DAOException("Aucun supérieur n'a été trouvé", 9998);
+            $requete = 'SELECT e.*
+                        FROM employes AS e
+                        INNER JOIN service AS s
+                        ON e.no_service = s.no_service WHERE';
+                      
+            if ($params) {
+                $i=0;
+                foreach ($params as $key => $value) {
+                    if ($i > 0) {
+                        $requete = $requete . " AND ";
+                    }
+                    $requete = $requete . " $key ='" .  "%" . $value . "%'";
+                }
+                $requete = $requete . $key . " ='%" . $value . "%' ";
+                $i++;
             }
-            return $allEmployes; 
-            
-        }catch (mysqli_sql_exception $e) {
+            else{
+            $requete = $requete . " 1 ";  //Va tout afficher
+            }
+
+            $stmt = $db->prepare($requete);
+            $stmt->execute();
+            $rs = $stmt->get_result();  
+            $employesFiltres = $rs->fetch_all(MYSQLI_ASSOC);
+
+            return $employesFiltres;        
+        }
+        catch (mysqli_sql_exception $e) {
             throw new DAOException($e->getMessage(),$e->getCode());           
         } 
-        finally{
-            $rs->free(); 
-            $db->close();  
-        }
-    
     }
 }
 
